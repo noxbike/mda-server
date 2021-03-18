@@ -6,7 +6,7 @@ var fs = require('fs');
 var cors = require('cors');
 var app = express();
 require('dotenv').config()
-var localhost ='192.168.1.12';
+var localhost ='localhost';
 
 app.use(cors({origin: `http://${localhost}:3000`, credentials: true}))
 app.use(cookieParser());
@@ -35,6 +35,8 @@ app.use(function (req, res, next) {
 app.get('/', function (req, res) {
   res.send('Bonjour !');
 });
+
+app.use(express.static('data'));
 
 app.use('/api/', apiRouter);
 

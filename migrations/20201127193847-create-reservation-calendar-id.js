@@ -17,6 +17,9 @@ module.exports = {
       nbrPerson:{
         type: Sequelize.INTEGER
       },
+      page:{
+        type: Sequelize.JSON
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

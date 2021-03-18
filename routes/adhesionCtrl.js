@@ -35,6 +35,7 @@ module.exports = {
                     <h2>Représentant légal</h2>
                     <div style='display: flex;'>
                         <div style='margin-right:100px;'>
+                            <p><strong>Civilite:</strong> ${representant_legale.civilite}</p>
                             <p><strong>Nom:</strong> ${representant_legale.nom}</p>
                             <p><strong>Prenom:</strong> ${representant_legale.prenom}</p>
                             <p><strong>Qualité:</strong> ${representant_legale.qualite}</p>

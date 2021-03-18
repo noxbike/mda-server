@@ -18,6 +18,9 @@ module.exports = {
         type: Sequelize.TEXT
       },
       contenu: {
+        type: Sequelize.TEXT
+      },
+      url: {
         type: Sequelize.STRING
       },
       auteur:{

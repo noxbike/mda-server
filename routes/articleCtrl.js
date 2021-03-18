@@ -28,5 +28,23 @@ module.exports = {
         .catch(function(err){
             return res.status(500).json({ 'error': err})
         })
-    }
+    },
+    getArticle: function(req, res){
+        var url = req.params.url;
+
+        models.Article.findOne({
+           where:{url: url}
+        })
+        .then(function(articleFound){
+            if(articleFound){
+                return res.status(201).json({ articleFound })
+            }
+            else{
+                return res.status(404).json({ 'error': 'not found'})
+            }
+        })
+        .catch(function(err){
+            return res.status(500).json({ 'error': err})
+        })
+    },
 }

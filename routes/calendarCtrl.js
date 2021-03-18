@@ -198,11 +198,12 @@ module.exports = {
         var association = req.body.association;
         var startTime = req.body.startTime;
         var endTime = req.body.endTime;
+        var telephone = req.body.telephone;
         var sujet = req.body.description;
         var email = req.body.email;
         var calendarId = 'Rendez-vous';
         
-        if(association == null || email == null || startTime == null || endTime == null || calendarId == null){
+        if(association == null || email == null || startTime == null  || telephone == null|| endTime == null || calendarId == null){
             return res.status(400).json({ 'erreur': 'paramètre manquante'})
         }
 
@@ -217,6 +218,7 @@ module.exports = {
             "start": startTime,
             "end": endTime,
             "email": email,
+            "telephone": telephone,
             "calendarId": calendarId,
             "description": sujet,
             "statut": 0,
@@ -230,8 +232,10 @@ module.exports = {
                         <div style='text-align: left;'>
                             <p><strong>Association:</strong> ${association}</p>
                             <p><strong>Date du rendez-vous:</strong> ${startTime}h</p>
+                            <p><strong>Email:</strong> ${email}</p>
+                            <p><strong>Téléphone:</strong> ${telephone}</p>
                             <p><strong>Sujet: </strong> ${sujet}</p>
-                            <a href='http://192.168.1.18:3000/listReservation/${newRV.id}'>Voir</a>
+                            <a href='http://192.168.1.14:3000/listReservation/${newRV.id}'>Voir</a>
                         </div>
                     </div>`;
                 confirm.send(req, res, message, 'noxbike@gmail.com');

@@ -1,4 +1,5 @@
 var models = require('../models');
+var public = require('./filesCtrl');
 
 module.exports = {
     affichageCarousel: function(req, res){
@@ -18,5 +19,8 @@ module.exports = {
         .catch(function(err){
             return res.status(500).json({ 'error': err})
         })
+    },
+    addCarousel: function(req, res){
+        var value = public.upload(req, res, './data/carousel')
     }
 }

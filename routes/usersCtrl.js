@@ -91,7 +91,7 @@ module.exports = {
                                     }
                                 })
                                 .catch(function(err){
-                                    return res.status(500).json({ 'error': err})
+                                    return res.status(500).json({ 'error': 'erreur interne'})
                                 })
                             }
                         }).catch(function(err){
@@ -99,13 +99,16 @@ module.exports = {
                         })
                     }
                     else{
-                        return res.status(404).json({ 'error': 'user not exist in DB' })
+                        return res.status(404).json({ 'error': 'Email ou Mot de passe incorrecte' })
                     }
                 })
             }
+            else{
+                return res.status(404).json({ 'error': 'Email ou Mot de passe incorrecte' })
+            }
         })
         .catch(function(err){
-            return res.status(500).json({ 'error': 'unable to verify user'});
+            return res.status(500).json({ 'error': "Impossible de vérifier l'utilisateur"});
         });
 
     },
@@ -184,21 +187,27 @@ module.exports = {
             
                 const userId = decodedToken.sub;
                 models.User.findOne({ 
-                    attributes: ['id'],
+                    attributes: ['id', 'email', 'isAdmin'],
                     where: { id: userId } 
                 })
                 .then(function(userFound){
                     if(userFound){
-                        return res.status(200).json({ 'user': true });
+                        return res.status(200).json({ 'user': userFound.email });
                     }
                     else{
-                        return res.status(200).json({ 'user': false });
+                        return res.status(404).json({ 'user': false });
                     }
                 })
             }
             catch(err){
-                return res.status(200).json({ 'user': false });
+                return res.status(500).json({ 'user': false });
             }
+        }
+        else if(!cookies && headers) {
+            
+        }
+        else{
+            return res.status(400).json({ 'user': false });
         }
         
     }

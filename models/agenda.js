@@ -15,9 +15,12 @@ module.exports = (sequelize, DataTypes) => {
   };
   Agenda.init({
     titre: DataTypes.STRING,
-    date: DataTypes.DATE,
+    du: DataTypes.DATE,
     photo: DataTypes.STRING,
-    contenu: DataTypes.STRING,
+    contenu: DataTypes.TEXT,
+    au: DataTypes.DATE,
+    ou: DataTypes.STRING,
+    url: DataTypes.STRING,
     auteur: DataTypes.STRING,
   }, {
     sequelize,

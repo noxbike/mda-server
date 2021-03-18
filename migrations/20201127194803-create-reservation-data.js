@@ -23,6 +23,9 @@ module.exports = {
       description: {
         type: Sequelize.STRING
       },
+      telephone: {
+        type: Sequelize.STRING
+      },
       end: {
         type: Sequelize.STRING
       },

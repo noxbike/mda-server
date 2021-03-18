@@ -37,7 +37,9 @@ exports.router = (function() {
     apiRouter.route('/salles/').get(servicesCtrl.getSalle);
     apiRouter.route('/reservation/').post(calendarCtrl.send);
     apiRouter.route('/articles').get(articleCtrl.get);
+    apiRouter.route('/articles/:url').get(articleCtrl.getArticle);
     apiRouter.route('/agenda').get(agendaCtrl.get);
+    apiRouter.route('/agenda/:url').get(agendaCtrl.getAgenda);
     apiRouter.route('/carousel').get(carouselCtrl.affichageCarousel);
     apiRouter.route('/partenaire').get(partenaireCtrl.AffichagePartenaire);
     apiRouter.route('/video').get(videoCtrl.get);
@@ -52,6 +54,9 @@ exports.router = (function() {
 
     apiRouter.route('/nouvelle-adhesion').post(adhesionCtrl.nouveaux);
     apiRouter.route('/private/file/').post(adhesionCtrl.uploadDocument);
+
+    apiRouter.route('/file/carousel/add').post(carouselCtrl.addCarousel);
+    /*apiRouter.route('/file/carousel/delete).delete(carousleCtrl.deleteCarousel);*/
 
     return apiRouter;
 }) ();

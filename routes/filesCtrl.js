@@ -23,7 +23,9 @@ module.exports = {
             return res.status(200).json({'file': req.file.filename})
         })
     },
-    
+    uploadCarousel: function(req, res, chemin){
+      
+    },
     delete: function(req, res){
         fs.unlink('./public/' + req.params.filename, function(err) {
             if (err) {

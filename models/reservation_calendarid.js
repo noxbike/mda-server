@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     calendarId: DataTypes.STRING,
     nbrPerson: DataTypes.INTEGER,
+    page: DataTypes.JSON,
   }, {
     sequelize,
     modelName: 'Reservation_calendarId',

@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Representant_legale.init({
+    civilite: DataTypes.STRING,
     nom: DataTypes.STRING,
     prenom: DataTypes.STRING,
     qualite: DataTypes.STRING,

@@ -11,13 +11,22 @@ module.exports = {
       titre: {
         type: Sequelize.STRING
       },
-      date: {
+      du: {
+        type: Sequelize.DATE
+      },
+      au: {
         type: Sequelize.DATE
       },
       photo: {
         type: Sequelize.STRING
       },
       contenu: {
+        type: Sequelize.TEXT
+      },
+      ou: {
+        type: Sequelize.STRING
+      },
+      url: {
         type: Sequelize.STRING
       },
       auteur:{
