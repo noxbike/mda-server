@@ -47,12 +47,18 @@ module.exports = {
       derniereAssembleeGenerale: {
         type: Sequelize.STRING
       },
-      UserId: {
+      RepresentantLegaleId: {
         type: Sequelize.INTEGER,
         references:{
           model: 'Representant_legales',
           key: 'id'
         }
+      },
+      page: {
+        type: Sequelize.BOOLEAN
+      },
+      theme:{
+        type:Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

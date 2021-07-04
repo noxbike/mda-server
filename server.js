@@ -1,22 +1,21 @@
 var express = require('express');
 var apiRouter = require('./apiRouter').router;
-var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var fs = require('fs');
 var cors = require('cors');
 var app = express();
 require('dotenv').config()
-var localhost ='localhost';
+var localhost = require('./url.json')
 
-app.use(cors({origin: `http://${localhost}:3000`, credentials: true}))
+app.use(cors({origin: `http://${localhost.localhost}`, credentials: true}))
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(express.urlencoded({extended: true}));
+app.use(express.json());
 
 app.use(function (req, res, next) {
 
     // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', `http://${localhost}:3000`);
+    res.setHeader('Access-Control-Allow-Origin', `http://${localhost.localhost}`);
 
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');

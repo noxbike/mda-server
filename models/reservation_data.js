@@ -20,8 +20,8 @@ module.exports = (sequelize, DataTypes) => {
     calendarId: DataTypes.STRING,
     telephone: DataTypes.STRING,
     description: DataTypes.STRING,
-    end: DataTypes.STRING,
-    start: DataTypes.STRING,
+    end: DataTypes.DATE,
+    start: DataTypes.DATE,
     statut: DataTypes.INTEGER,
   }, {
     sequelize,

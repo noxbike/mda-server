@@ -87,7 +87,16 @@ module.exports = {
                                                 var xsrfToken = token[value];
                                             }
                                         }
-                                        return res.status(200).json({ 'token': xsrfToken, 'userId': userFound.id});
+                                        models.User.findOne({
+                                            attributes:['id','status','email'],
+                                            where: { email: email }
+                                        })
+                                        .then(function(accessFound){
+                                            return res.status(200).json({ 'token': xsrfToken, 'userId': accessFound.id, 'status': accessFound.status});
+                                        })
+                                       .catch(function(err){
+                                           return res.status(500).json({'erro':'erreur interne'});
+                                       })
                                     }
                                 })
                                 .catch(function(err){
@@ -171,6 +180,45 @@ module.exports = {
     },
     auth: function(req, res){
         const { cookies, headers } = req;
+        var user = -1;
+        if(cookies && headers){
+            try{
+                const accessToken = cookies.accessToken;
+
+                const xsrfToken = headers['x-xsrf-token'];
+
+                const decodedToken = jwt.verify(accessToken, jwt_SIGN_SECRET, {
+                    algorithms: config.algorithm
+                });
+                if (xsrfToken !== decodedToken.xsrfToken) {
+                    return res.status(400).json(null);
+                }
+            
+                const userId = decodedToken.sub;
+                models.User.findOne({ 
+                    attributes: ['id', 'email', 'isAdmin','status'],
+                    where: { id: userId } 
+                })
+                .then(function(userFound){
+                    if(userFound){
+                        return res.status(200).json({ 'email': userFound.email, 'status': userFound.status });
+                    }
+                    else{
+                        return res.status(404).json(null);
+                    }
+                })
+            }
+            catch(err){
+                return res.status(400).json(null);
+            }
+        }
+        else{
+            return res.status(400).json(null);
+        }
+        
+    },
+    dashboard: function(req, res){
+        const { cookies, headers } = req;
         var user = -1
         if(cookies && headers){
             try{
@@ -187,7 +235,7 @@ module.exports = {
             
                 const userId = decodedToken.sub;
                 models.User.findOne({ 
-                    attributes: ['id', 'email', 'isAdmin'],
+                    attributes: ['id', 'email', 'isAdmin','status'],
                     where: { id: userId } 
                 })
                 .then(function(userFound){
@@ -210,5 +258,79 @@ module.exports = {
             return res.status(400).json({ 'user': false });
         }
         
+    },
+    cookieClear: function(req, res){
+        var { cookies } = req
+
+        var accessToken = cookies.accessToken;
+        
+        console.log(accessToken)
+        return res.status(200).json({'message': 'ok'})
+    },
+    listAdmin: function(req, res){
+        models.User.findAll({
+            order:[['id', 'DESC']],
+            where:{status: 'Admin'}
+        })
+        .then(function(adminFound){
+            if(adminFound){
+                return res.status(201).json({ adminFound })
+            }
+            else{
+                return res.status(404).json({ 'error': 'not found'})
+            }
+        })
+        .catch(function(err){
+            return res.status(500).json({ 'error': err})
+        })
+    },
+    addAdmin: function(req, res){
+        models.User.findOne({
+            where:{email: req.body.email}
+        })
+        .then(function(userFound){
+            if(!userFound){
+                var userCreate = models.User.create({
+                    email: req.body.email,
+                    password: 'wesh',
+                    isAdmin: 1,
+                    status: 'Admin',
+                })
+                .then(function(userCreate){
+                    if(userCreate){
+                        return res.status(200).json({'Message': 'Utilisateur admin ajouté'});
+                    }
+                    else{
+                        return res.status(400).json({'Error': "Impossible d'ajouter l'utilisateur"})
+                    }
+                })
+                .catch(function(err){
+                   console.log(err)
+                })
+            }
+            else{
+                return res.status(400).json({'Error': 'Utilisateur déjà existant'})
+            }
+        })
+        .catch(function(err){
+            console.log(err)
+        })
+    },
+    deleteAdmin: function(req, res){
+        models.User.findOne({
+            where:{email: req.body.email}
+        })
+        .then(function(userFound){
+            if(userFound){
+                userFound.destroy()
+                return res.status(200).json({'message': 'Utilisateur supprimé!'})
+            }
+            else{
+                return res.status(404).json({'Error': 'Utilisateur inexistant'})
+            }
+        })
+        .catch(function(err){
+            return res.status(500).json({'Error': "Erreur interne veuillez contactez l'admin"})
+        })
     }
 }

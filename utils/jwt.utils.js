@@ -14,7 +14,7 @@ module.exports = {
             {
                 algorithm: config.accessToken.algorithm,
                 audience: config.accessToken.audience,
-                expiresIn: config.accessToken.expiresIn / 2, // Le délai avant expiration exprimé en seconde
+                expiresIn: config.accessToken.expiresIn, // Le délai avant expiration exprimé en seconde
                 issuer: config.accessToken.issuer,
                 subject: userData.toString()
             })

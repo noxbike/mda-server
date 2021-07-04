@@ -43,5 +43,5 @@ module.exports = {
         .catch(function(err){
             return res.status(500).json({ 'error': err})
         })
-    }
+    },
 }

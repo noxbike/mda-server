@@ -10,8 +10,9 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
+      models.Identification_association.hasOne(models.AssociationPage);
       models.Identification_association.belongsTo(models.Representant_legale,{
-        foreignKey: 'UserId'
+        foreignKey: 'RepresentantLegaleId'
       });
     }
   };
@@ -29,7 +30,9 @@ module.exports = (sequelize, DataTypes) => {
     numAgrement: DataTypes.STRING,
     Affiliation: DataTypes.STRING,
     derniereAssembleeGenerale: DataTypes.STRING,
-    UserId: DataTypes.INTEGER
+    RepresentantLegaleId: DataTypes.INTEGER,
+    page: DataTypes.BOOLEAN,
+    theme: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Identification_association',

@@ -4,19 +4,20 @@ const {google} = require('googleapis');
 const { OAuth2 } = google.auth;
 var confirm = require('../utils/confirmation');
 var moment = require('../utils/moment');
+var localhost = require('../url.json');
 
 module.exports = {
-    send: async function(req, res){
+    demandeReservation: async function(req, res){
 
         var association = req.body.association;
-        var nombrePersonne = req.body.nombrePersonne;
+        var nbrPerson = req.body.nbrPerson;
         var startTime = req.body.startTime;
         var endTime = req.body.endTime;
         var description = req.body.description;
         var email = req.body.email;
         var calendarId = req.body.calendarId;
         
-        if(association == null || nombrePersonne == null || startTime == null || endTime == null || calendarId == null){
+        if( !association || !nbrPerson || !startTime || !endTime || !calendarId){
             return res.status(400).json({ 'erreur': 'paramètre manquante'})
         }
 
@@ -32,7 +33,7 @@ module.exports = {
 
         var newReservation = models.Reservation_data.create({
             "association": association,
-            "nbrPerson":nombrePersonne,
+            "nbrPerson":nbrPerson,
             "start": startTime,
             "end": endTime,
             "email": email,
@@ -49,27 +50,27 @@ module.exports = {
                         <h1>Quelqu'un souhaite reserver</h1>
                         <div style='text-align: left;'>
                             <p><strong>Association:</strong> ${association}</p>
-                            <p><strong>Nombre de personne:</strong> ${nombrePersonne}</p>
+                            <p><strong>Nombre de personne:</strong> ${nbrPerson}</p>
                             <p><strong>Salle:</strong> ${calendarId}</p>
                             <p><strong>Date de début:</strong> ${startTime}h</p>
                             <p><strong>Date de fin:</strong> ${endTime}h</p>
                             <p><strong>Matériel:</strong> ${desc}</p>
-                            <a href='http://mda-saintbenoit.re/listReservation/${newReservation.id}'>Voir</a>
+                            <a href='http://${localhost.localhost}/admin/reservation'>Voir</a>
                         </div>
                     </div>`;
                 confirm.send(req, res, message, 'noxbike@gmail.com');
 
-                res.status(200).json({'message': 'Réservation enregistrer, vous reçevrez une confirmation par email'})
+                return res.status(200).json({'message': 'Réservation enregistrer, vous reçevrez une confirmation par email'})
             }
             else{
                 return res.status(500).json({'erreur': "impossible d'ajouter votre réservation! veuillez contacter l'administrateur"})
             }
         })
         .catch(function(err){
-            return res.status(500).json({'erreur': "Erreur interne veuillez contacter l'administrateur"})
+            return res.status(500).json({'erreur': "impossible d'ajouter votre réservation! veuillez contacter l'administrateur"})
         })
     },
-    pay: function(req, res){
+    demandeDePayer: function(req, res){
         const eventId = req.params.id
 
         models.Reservation_data.findOne({
@@ -89,7 +90,7 @@ module.exports = {
             return res.status(500).json({'erreur': "erreur interne veuillez contactez l'administrateur"});
         })
     },
-    add:function(req, res){
+    confirmation:function(req, res){
         const eventId = req.params.id
 
         models.Reservation_data.findOne({
@@ -127,7 +128,7 @@ module.exports = {
                             )
                             
                             oAuth2Client.setCredentials({
-                                refresh_token: '1//04YR5hMf8OaykCgYIARAAGAQSNwF-L9IrdXeHfoIQTlIlFXsDqVkXgxAFtyW1yJLrthJ8gbLa2X1cHx0eff-JjH-fjeDfZVB-5iQ',
+                                refresh_token: '1//042cyhFI9KDJlCgYIARAAGAQSNwF-L9Ir3hXwheJdI-Mr087SU_NSzkdG9bQ5wegAGmuNOK-YZJ5lt12gzfYFHsSOsKxBs2r9kgk',
                             })
                             
                             const calendar = google.calendar({ version: 'v3', auth: oAuth2Client })
@@ -179,7 +180,7 @@ module.exports = {
                         }
                     })
                     .catch(function(err){
-                        return res.status(500).json({'erreur': "erreur interne veuillez contacté l'administrateur"})
+                        console.log(err)
                     })
                 }
                 else{
@@ -191,10 +192,10 @@ module.exports = {
             }
         })
        .catch(function(err){
-           return res.status(500).json({ "erreur": "erreur interne veuillez contacté l'administrateur"})
+           console.log(err)
        })
     },
-    sendRV: function(req, res){
+    demandeRendezVous: function(req, res){
         var association = req.body.association;
         var startTime = req.body.startTime;
         var endTime = req.body.endTime;
@@ -215,6 +216,7 @@ module.exports = {
 
         var newReservation = models.Reservation_data.create({
             "association": association,
+            'nbrPerson': 1,
             "start": startTime,
             "end": endTime,
             "email": email,
@@ -235,7 +237,7 @@ module.exports = {
                             <p><strong>Email:</strong> ${email}</p>
                             <p><strong>Téléphone:</strong> ${telephone}</p>
                             <p><strong>Sujet: </strong> ${sujet}</p>
-                            <a href='http://192.168.1.14:3000/listReservation/${newRV.id}'>Voir</a>
+                            <a href='http://${localhost.localhost}/admin/rendez-vous'>Voir</a>
                         </div>
                     </div>`;
                 confirm.send(req, res, message, 'noxbike@gmail.com');
@@ -250,7 +252,7 @@ module.exports = {
            console.log(err)
         })
     },
-    rejected: function(req, res){
+    delete: function(req, res){
         var id = req.params.id;
 
         models.Reservation_data.findOne({
@@ -260,8 +262,6 @@ module.exports = {
             if(reservationFound){
                 var del = reservationFound.destroy();
                 if(del){
-                    var message =`<h3 style='font-weight: 700;'>Votre Réservation à été refusé</h3>`;
-                    confirm.send(req, res, message, reservationFound.email);
                     return res.status(200).json({'message': 'Réservation supprimer !'})
                 }
                 else{
@@ -323,7 +323,7 @@ module.exports = {
             }
         })
         .catch(function(err){
-            return res.status(500).json({ 'error': err})
+            return res.status(500).json({ 'error': "erreur interne veuillez contactez l'administrateur"})
         })
     }
 }

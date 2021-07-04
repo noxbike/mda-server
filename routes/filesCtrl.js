@@ -23,9 +23,6 @@ module.exports = {
             return res.status(200).json({'file': req.file.filename})
         })
     },
-    uploadCarousel: function(req, res, chemin){
-      
-    },
     delete: function(req, res){
         fs.unlink('./public/' + req.params.filename, function(err) {
             if (err) {
@@ -43,5 +40,14 @@ module.exports = {
         
           console.log('file deleted');
         });
-  }
+    },
+    deleteWithChemin: function(req, res, photo, chemin){
+      fs.unlink(chemin + photo, function(err) {
+          if (err) {
+            return false;
+          };
+        
+          return true;
+      });
+  },
 }
